@@ -27,7 +27,6 @@
 		<jjwt.version>0.11.5</jjwt.version>
 		<springdoc.version>2.6.0</springdoc.version>
 		<bucket4j.version>7.6.0</bucket4j.version>
-		<lombok.version>1.18.34</lombok.version>
 	</properties>
 
 	<!-- Dependencies -->
@@ -134,12 +133,11 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- LOMBOK -->
+	<!-- LOMBOK -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- TESTING -->
