@@ -7,34 +7,30 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "therapists")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Therapist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "therapist_id")
+    private Long therapistId;
 
-    @Column(nullable = false, length = 60)
-    private String username;
+    @Column(name = "full_name", nullable = false, length = 100)
+    private String fullName;
 
-    @Column(unique = true, length = 120)
+    @Column(unique = true, nullable = false, length = 120)
     private String email;
 
     @Column(name = "password_hash", nullable = false, columnDefinition = "TEXT")
     private String passwordHash;
 
-    @Column(columnDefinition = "TEXT")
-    private String bio;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.USER;
+    @Column(length = 100)
+    private String specialisation;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,11 +40,7 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public enum Role {
-        USER, THERAPIST, ADMIN
-    }
-
     public enum Status {
-        ACTIVE, SUSPENDED
+        ACTIVE, INACTIVE, SUSPENDED
     }
 }
