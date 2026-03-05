@@ -1,37 +1,29 @@
-package com.alu.wellconnect.controller;
+package com.alu.wellconnect.service;
 
-import com.alu.wellconnect.dto.TagRequest;
-import com.alu.wellconnect.entity.Tag;
-import com.alu.wellconnect.service.TagService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
+import com.alu.wellconnect.dto.CategoryRequest;
+import com.alu.wellconnect.entity.StoryCategory;
+import com.alu.wellconnect.repository.StoryCategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api")
+@Service
 @RequiredArgsConstructor
-@io.swagger.v3.oas.annotations.tags.Tag(name = "Tags", description = "Story tag management")
-public class TagController {
+public class CategoryService {
 
-    private final TagService tagService;
+    private final StoryCategoryRepository categoryRepository;
 
-    @PostMapping("/admin/tags")
-    @PreAuthorize("hasRole('ADMIN')")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Create tag (Admin only)")
-    public ResponseEntity<Tag> createTag(@Valid @RequestBody TagRequest request) {
-        return ResponseEntity.ok(tagService.createTag(request));
+    public StoryCategory createCategory(CategoryRequest request) {
+        StoryCategory category = StoryCategory.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .build();
+
+        return categoryRepository.save(category);
     }
 
-    @GetMapping("/tags")
-    @Operation(summary = "Get all tags")
-    public ResponseEntity<List<Tag>> getAllTags() {
-        return ResponseEntity.ok(tagService.getAllTags());
+    public List<StoryCategory> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }
