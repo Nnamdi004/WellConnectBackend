@@ -1,37 +1,27 @@
-package com.alu.wellconnect.controller;
+package com.alu.wellconnect.service;
 
 import com.alu.wellconnect.dto.TagRequest;
 import com.alu.wellconnect.entity.Tag;
-import com.alu.wellconnect.service.TagService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
+import com.alu.wellconnect.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api")
+@Service
 @RequiredArgsConstructor
-@io.swagger.v3.oas.annotations.tags.Tag(name = "Tags", description = "Story tag management")
-public class TagController {
+public class TagService {
 
-    private final TagService tagService;
+    private final TagRepository tagRepository;
 
-    @PostMapping("/admin/tags")
-    @PreAuthorize("hasRole('ADMIN')")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Create tag (Admin only)")
-    public ResponseEntity<Tag> createTag(@Valid @RequestBody TagRequest request) {
-        return ResponseEntity.ok(tagService.createTag(request));
+    public Tag createTag(TagRequest request) {
+        Tag tag = Tag.builder()
+                .name(request.getName())
+                .build();
+        return tagRepository.save(tag);
     }
 
-    @GetMapping("/tags")
-    @Operation(summary = "Get all tags")
-    public ResponseEntity<List<Tag>> getAllTags() {
-        return ResponseEntity.ok(tagService.getAllTags());
+    public List<Tag> getAllTags() {
+        return tagRepository.findAll();
     }
 }

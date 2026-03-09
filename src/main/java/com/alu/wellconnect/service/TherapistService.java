@@ -52,7 +52,7 @@ public class TherapistService {
 
         return AuthResponse.builder()
                 .token(token)
-                .email(therapist.getEmail())
+                .username(therapist.getEmail())
                 .role("THERAPIST")
                 .build();
     }
