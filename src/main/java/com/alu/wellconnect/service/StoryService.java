@@ -23,6 +23,7 @@ public class StoryService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public StoryResponse createStory(StoryRequest request, String email) {
@@ -95,6 +96,21 @@ public class StoryService {
                 .build();
 
         Comment saved = commentRepository.save(comment);
+
+        Story story = storyRepository.findById(storyId).orElse(null);
+        if (story != null && !story.getUserId().equals(user.getUserId())) {
+            User author = userRepository.findById(story.getUserId()).orElse(null);
+            if (author != null) {
+                String commenterName = request.getIsAnonymous() ? "Someone" : user.getUsername();
+                notificationService.createNotification(
+                        author,
+                        NotificationType.NEW_COMMENT,
+                        storyId,
+                        commenterName + " recently commented on your story."
+                );
+            }
+        }
+
         return mapToCommentResponse(saved);
     }
 
