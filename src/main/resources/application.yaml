@@ -33,3 +33,7 @@ jwt:
 
 encryption:
   key: ${ENCRYPTION_KEY:1234567890123456}
+
+admin:
+  email: ${ADMIN_EMAIL:admin@wellconnect.com}
+  password: ${ADMIN_PASSWORD:admin123}
