@@ -27,8 +27,15 @@ public class Appointment {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-    
-    // We omit fields like user, therapist, scheduledTime etc. 
-    // for now as they are not specifically requested in this Sprint
-    // and this minimal entity satisfies the foreign key requirement.
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "therapist_id")
+    private Therapist therapist;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "scheduled_time")
+    private LocalDateTime scheduledTime;
 }

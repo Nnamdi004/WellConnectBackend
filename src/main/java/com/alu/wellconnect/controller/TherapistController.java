@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -66,5 +69,13 @@ public class TherapistController {
     public ResponseEntity<Void> deleteTherapist(@PathVariable Long id) {
         therapistService.deleteTherapist(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/therapists/{id}/availability")
+    @Operation(summary = "Get therapist availability")
+    public ResponseEntity<List<String>> getAvailability(
+            @PathVariable Long id, 
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(therapistService.getAvailability(id, date));
     }
 }

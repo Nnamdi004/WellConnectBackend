@@ -32,6 +32,9 @@ public class Therapist {
     @Column(length = 100)
     private String specialisation;
 
+    @Column(name = "daily_available_hours")
+    private String dailyAvailableHours = "09:00-17:00";
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.ACTIVE;

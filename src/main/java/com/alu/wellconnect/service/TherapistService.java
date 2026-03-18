@@ -8,14 +8,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.alu.wellconnect.entity.Appointment;
+import com.alu.wellconnect.entity.AppointmentStatus;
+import com.alu.wellconnect.repository.AppointmentRepository;
 
 @Service
 @RequiredArgsConstructor
 public class TherapistService {
 
     private final TherapistRepository therapistRepository;
+    private final AppointmentRepository appointmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -94,6 +102,39 @@ public class TherapistService {
         Therapist therapist = therapistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Therapist not found"));
         therapistRepository.delete(therapist);
+    }
+
+    public List<String> getAvailability(Long therapistId, LocalDate date) {
+        Therapist therapist = therapistRepository.findById(therapistId)
+                .orElseThrow(() -> new RuntimeException("Therapist not found"));
+
+        String hours = therapist.getDailyAvailableHours();
+        if (hours == null || hours.isBlank()) {
+            hours = "09:00-17:00";
+        }
+
+        String[] parts = hours.split("-");
+        LocalTime startTime = LocalTime.parse(parts[0]);
+        LocalTime endTime = LocalTime.parse(parts[1]);
+
+        List<String> allSlots = new ArrayList<>();
+        LocalTime current = startTime;
+        while (current.isBefore(endTime)) {
+            allSlots.add(current.toString());
+            current = current.plusHours(1);
+        }
+
+        List<Appointment> existingAppointments = appointmentRepository.findAppointmentsByTherapistAndDate(
+                therapistId,
+                date,
+                List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED));
+
+        List<String> bookedTimes = existingAppointments.stream()
+                .map(a -> a.getScheduledTime().toLocalTime().toString())
+                .collect(Collectors.toList());
+
+        allSlots.removeAll(bookedTimes);
+        return allSlots;
     }
 
     private TherapistResponse mapToResponse(Therapist therapist) {
