@@ -104,39 +104,6 @@ public class TherapistService {
         therapistRepository.delete(therapist);
     }
 
-    public List<String> getAvailability(Long therapistId, LocalDate date) {
-        Therapist therapist = therapistRepository.findById(therapistId)
-                .orElseThrow(() -> new RuntimeException("Therapist not found"));
-
-        String hours = therapist.getDailyAvailableHours();
-        if (hours == null || hours.isBlank()) {
-            hours = "09:00-17:00";
-        }
-
-        String[] parts = hours.split("-");
-        LocalTime startTime = LocalTime.parse(parts[0]);
-        LocalTime endTime = LocalTime.parse(parts[1]);
-
-        List<String> allSlots = new ArrayList<>();
-        LocalTime current = startTime;
-        while (current.isBefore(endTime)) {
-            allSlots.add(current.toString());
-            current = current.plusHours(1);
-        }
-
-        List<Appointment> existingAppointments = appointmentRepository.findAppointmentsByTherapistAndDate(
-                therapistId,
-                date,
-                List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED));
-
-        List<String> bookedTimes = existingAppointments.stream()
-                .map(a -> a.getScheduledTime().toLocalTime().toString())
-                .collect(Collectors.toList());
-
-        allSlots.removeAll(bookedTimes);
-        return allSlots;
-    }
-
     private TherapistResponse mapToResponse(Therapist therapist) {
         return TherapistResponse.builder()
                 .therapistId(therapist.getTherapistId())

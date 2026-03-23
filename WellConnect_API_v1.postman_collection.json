@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "WellConnect API v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "User Register",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Submit Intake",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/intake",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phq9Score\": 15,\n  \"gad7Score\": 10\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Therapists",
+      "item": [
+        {
+          "name": "Get Availability",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/therapists/1/availability?date=2026-03-25"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stories",
+      "item": [
+        {
+          "name": "Get Feed",
+          "request": { "method": "GET", "url": "{{base_url}}/api/stories" }
+        },
+        {
+          "name": "Add Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/stories/10/comments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Great story!\",\n  \"isAnonymous\": false\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/appointments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"therapistId\": 1,\n  \"scheduledTime\": \"2026-03-25T10:00:00\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get My Notifications",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/notifications/me"
+          },
+          "response": [
+            {
+              "name": "Example Success Response",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"notificationId\": 101,\n    \"type\": \"NEW_COMMENT\",\n    \"referenceId\": 10,\n    \"message\": \"Someone recently commented on your story.\",\n    \"isRead\": false,\n    \"createdAt\": \"2026-03-23T15:00:00\"\n  }\n]"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": { "type": "text/javascript", "exec": [""] }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080" }
+  ]
+}

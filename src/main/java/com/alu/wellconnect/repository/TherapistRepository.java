@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface TherapistRepository extends JpaRepository<Therapist, Long> {
     Optional<Therapist> findByEmail(String email);
     boolean existsByEmail(String email);
+    java.util.List<Therapist> findBySpecialisation(String specialisation);
 }

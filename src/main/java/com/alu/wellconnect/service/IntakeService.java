@@ -60,13 +60,13 @@ public class IntakeService {
      * - Else → MINIMAL
      */
     private SeverityLevel calculateSeverityLevel(Integer phq9Score, Integer gad7Score) {
-        int maxScore = Math.max(phq9Score, gad7Score);
+        int totalScore = phq9Score + gad7Score;
 
-        if (maxScore >= 15) {
+        if (totalScore >= 15) {
             return SeverityLevel.SEVERE;
-        } else if (maxScore >= 10) {
+        } else if (totalScore >= 10) {
             return SeverityLevel.MODERATE;
-        } else if (maxScore >= 5) {
+        } else if (totalScore >= 4) {
             return SeverityLevel.MILD;
         } else {
             return SeverityLevel.MINIMAL;
