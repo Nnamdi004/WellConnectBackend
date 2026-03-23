@@ -3,8 +3,11 @@ package com.alu.wellconnect.controller;
 import com.alu.wellconnect.dto.CreateReportRequest;
 import com.alu.wellconnect.dto.UpdateReportRequest;
 import com.alu.wellconnect.entity.ContentReport;
+import com.alu.wellconnect.repository.UserRepository;
 import com.alu.wellconnect.service.ContentReportService;
 import com.alu.wellconnect.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ public class ContentReportController {
 
     private final ContentReportService contentReportService;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @PostMapping("/reports")
     public ResponseEntity<ContentReport> createReport(
@@ -35,12 +39,16 @@ public class ContentReportController {
 
     @GetMapping("/admin/reports")
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get all pending reports (Admin only)")
     public ResponseEntity<List<ContentReport>> getPendingReports() {
         return ResponseEntity.ok(contentReportService.getPendingReports());
     }
 
     @PutMapping("/admin/reports/{reportId}")
     @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Update report status (Admin only)")
     public ResponseEntity<ContentReport> updateReport(
             @PathVariable Long reportId,
             @Valid @RequestBody UpdateReportRequest request,
@@ -53,8 +61,24 @@ public class ContentReportController {
         return ResponseEntity.ok(report);
     }
 
+    @PutMapping("/admin/reports/{reportId}/resolve")
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Resolve a report: removes the story and optionally suspends the user (Admin only)")
+    public ResponseEntity<ContentReport> resolveReport(
+            @PathVariable Long reportId,
+            @RequestHeader("Authorization") String token) {
+
+        String email = jwtUtil.extractEmail(token.substring(7));
+        Long adminId = extractUserIdFromEmail(email);
+
+        ContentReport resolved = contentReportService.resolveReport(reportId, adminId);
+        return ResponseEntity.ok(resolved);
+    }
+
     private Long extractUserIdFromEmail(String email) {
-        // TODO: Implement user lookup by email
-        return 1L;
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found for email: " + email))
+                .getUserId();
     }
 }
