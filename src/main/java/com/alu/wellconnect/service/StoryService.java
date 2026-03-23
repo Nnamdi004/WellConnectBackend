@@ -21,8 +21,9 @@ public class StoryService {
     private final StoryCategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
-    private final LikeRepository likeRepository;
+    private final StoryReactionRepository reactionRepository;
     private final NotificationService notificationService;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public StoryResponse createStory(StoryRequest request, String email) {
@@ -62,16 +63,16 @@ public class StoryService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (likeRepository.existsByStoryIdAndUserId(storyId, user.getUserId())) {
+        if (reactionRepository.existsByStoryIdAndUserId(storyId, user.getUserId())) {
             throw new RuntimeException("Already liked");
         }
 
-        Like like = Like.builder()
+        StoryReaction like = StoryReaction.builder()
                 .storyId(storyId)
                 .userId(user.getUserId())
                 .build();
 
-        likeRepository.save(like);
+        reactionRepository.save(like);
     }
 
     @Transactional
@@ -79,7 +80,7 @@ public class StoryService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        likeRepository.deleteByStoryIdAndUserId(storyId, user.getUserId());
+        reactionRepository.deleteByStoryIdAndUserId(storyId, user.getUserId());
     }
 
     private StoryResponse mapToResponse(Story story) {
@@ -97,7 +98,7 @@ public class StoryService {
                 .visibility(story.getVisibility())
                 .status(story.getStatus())
                 .tags(story.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
-                .likeCount(likeRepository.countByStoryId(story.getStoryId()))
+                .likeCount(reactionRepository.countByStoryId(story.getStoryId()))
                 .commentCount(commentRepository.countByStoryId(story.getStoryId()))
                 .createdAt(story.getCreatedAt())
                 .updatedAt(story.getUpdatedAt())
