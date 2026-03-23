@@ -22,7 +22,6 @@ public class StoryService {
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
-    private final CommentRepository commentRepository;
     private final NotificationService notificationService;
 
     @Transactional
@@ -83,43 +82,6 @@ public class StoryService {
         likeRepository.deleteByStoryIdAndUserId(storyId, user.getUserId());
     }
 
-    @Transactional
-    public CommentResponse addComment(Long storyId, CommentRequest request, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Comment comment = Comment.builder()
-                .storyId(storyId)
-                .userId(user.getUserId())
-                .content(request.getContent())
-                .isAnonymous(request.getIsAnonymous())
-                .build();
-
-        Comment saved = commentRepository.save(comment);
-
-        Story story = storyRepository.findById(storyId).orElse(null);
-        if (story != null && !story.getUserId().equals(user.getUserId())) {
-            User author = userRepository.findById(story.getUserId()).orElse(null);
-            if (author != null) {
-                String commenterName = request.getIsAnonymous() ? "Someone" : user.getUsername();
-                notificationService.createNotification(
-                        author,
-                        NotificationType.NEW_COMMENT,
-                        storyId,
-                        commenterName + " recently commented on your story."
-                );
-            }
-        }
-
-        return mapToCommentResponse(saved);
-    }
-
-    public List<CommentResponse> getComments(Long storyId) {
-        return commentRepository.findByStoryIdOrderByCreatedAtDesc(storyId).stream()
-                .map(this::mapToCommentResponse)
-                .collect(Collectors.toList());
-    }
-
     private StoryResponse mapToResponse(Story story) {
         User user = userRepository.findById(story.getUserId()).orElse(null);
         StoryCategory category = categoryRepository.findById(story.getCategoryId()).orElse(null);
@@ -139,19 +101,6 @@ public class StoryService {
                 .commentCount(commentRepository.countByStoryId(story.getStoryId()))
                 .createdAt(story.getCreatedAt())
                 .updatedAt(story.getUpdatedAt())
-                .build();
-    }
-
-    private CommentResponse mapToCommentResponse(Comment comment) {
-        User user = userRepository.findById(comment.getUserId()).orElse(null);
-
-        return CommentResponse.builder()
-                .commentId(comment.getCommentId())
-                .storyId(comment.getStoryId())
-                .authorUsername(comment.getIsAnonymous() ? "Anonymous" : (user != null ? user.getUsername() : "Unknown"))
-                .content(comment.getContent())
-                .isAnonymous(comment.getIsAnonymous())
-                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }
