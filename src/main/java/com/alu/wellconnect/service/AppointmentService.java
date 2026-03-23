@@ -22,6 +22,10 @@ public class AppointmentService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public java.util.List<String> getAvailableSlots(Long therapistId, String date) {
+        return getAvailability(therapistId, java.time.LocalDate.parse(date));
+    }
+
     public java.util.List<String> getAvailability(Long therapistId, java.time.LocalDate date) {
         com.alu.wellconnect.entity.Therapist therapist = therapistRepository.findById(therapistId)
                 .orElseThrow(() -> new RuntimeException("Therapist not found"));
