@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: wellconnect-backend
+    env: docker
+    plan: free # Change to a paid plan if needed
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SERVER_PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_URL
+        fromDatabase:
+          name: wellconnect-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: wellconnect-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: wellconnect-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+databases:
+  - name: wellconnect-db
+    databaseName: wellconnect
+    user: wellconnect_user
+    plan: free
