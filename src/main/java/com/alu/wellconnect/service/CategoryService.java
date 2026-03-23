@@ -4,6 +4,8 @@ import com.alu.wellconnect.dto.CategoryRequest;
 import com.alu.wellconnect.entity.StoryCategory;
 import com.alu.wellconnect.repository.StoryCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,7 @@ public class CategoryService {
 
     private final StoryCategoryRepository categoryRepository;
 
+    @CacheEvict(value = "categories", allEntries = true)
     public StoryCategory createCategory(CategoryRequest request) {
         StoryCategory category = StoryCategory.builder()
                 .name(request.getName())
@@ -23,6 +26,7 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    @Cacheable(value = "categories")
     public List<StoryCategory> getAllCategories() {
         return categoryRepository.findAll();
     }
