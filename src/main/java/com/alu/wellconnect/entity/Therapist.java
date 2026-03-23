@@ -43,6 +43,14 @@ public class Therapist {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    public String getStandardHours() {
+        return dailyAvailableHours;
+    }
+
+    public void setStandardHours(String hours) {
+        this.dailyAvailableHours = hours;
+    }
+
     public enum Status {
         ACTIVE, INACTIVE, SUSPENDED
     }

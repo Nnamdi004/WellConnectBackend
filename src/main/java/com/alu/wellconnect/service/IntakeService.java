@@ -27,7 +27,7 @@ public class IntakeService {
             throw new RuntimeException("User already has an active intake questionnaire");
         }
 
-        SeverityLevel severityLevel = calculateSeverityLevel(request.getPhq9Score(), request.getGad7Score());
+        SeverityLevel severityLevel = calculateSeverity(request);
 
         IntakeQuestionnaire intake = IntakeQuestionnaire.builder()
                 .userId(user.getUserId())
@@ -59,7 +59,11 @@ public class IntakeService {
      * - If either score >= 5 → MILD
      * - Else → MINIMAL
      */
-    private SeverityLevel calculateSeverityLevel(Integer phq9Score, Integer gad7Score) {
+    public SeverityLevel calculateSeverity(com.alu.wellconnect.dto.IntakeRequest request) {
+        return calculateSeverity(request.getPhq9Score(), request.getGad7Score());
+    }
+
+    public SeverityLevel calculateSeverity(Integer phq9Score, Integer gad7Score) {
         int totalScore = phq9Score + gad7Score;
 
         if (totalScore >= 15) {

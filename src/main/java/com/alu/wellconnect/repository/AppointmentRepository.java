@@ -14,6 +14,10 @@ import org.springframework.stereotype.Repository;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     @Query("SELECT a FROM Appointment a WHERE a.therapist.therapistId = :therapistId " +
+           "AND DATE(a.scheduledTime) = CAST(:date AS date)")
+    List<Appointment> findByTherapistIdAndDate(@Param("therapistId") Long therapistId, @Param("date") String date);
+
+    @Query("SELECT a FROM Appointment a WHERE a.therapist.therapistId = :therapistId " +
            "AND DATE(a.scheduledTime) = :date AND a.status IN :statuses")
     List<Appointment> findAppointmentsByTherapistAndDate(
             @Param("therapistId") Long therapistId,
