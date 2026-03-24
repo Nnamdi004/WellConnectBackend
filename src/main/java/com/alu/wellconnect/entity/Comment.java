@@ -23,6 +23,10 @@ public class Comment {
     @Column(name = "story_id", nullable = false)
     private Long storyId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
 

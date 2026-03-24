@@ -8,14 +8,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.alu.wellconnect.entity.Appointment;
+import com.alu.wellconnect.entity.AppointmentStatus;
+import com.alu.wellconnect.repository.AppointmentRepository;
 
 @Service
 @RequiredArgsConstructor
 public class TherapistService {
 
     private final TherapistRepository therapistRepository;
+    private final AppointmentRepository appointmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -52,7 +60,7 @@ public class TherapistService {
 
         return AuthResponse.builder()
                 .token(token)
-                .email(therapist.getEmail())
+                .username(therapist.getEmail())
                 .role("THERAPIST")
                 .build();
     }

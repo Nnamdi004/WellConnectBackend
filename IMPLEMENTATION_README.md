@@ -1,31 +1,31 @@
-# 🏥 WellConnect Backend - Sprint 1 Day 2 Complete
+#  WellConnect Backend - Sprint 1 Day 2 Complete
 
-## 📋 Implementation Overview
+##  Implementation Overview
 
 This implementation provides a complete **Admin and Therapist Management System** with JWT authentication, role-based access control, and secure password handling.
 
 ---
 
-## 🎯 Features Delivered
+##  Features Delivered
 
-### ✅ Admin Management
+###  Admin Management
 - **Auto-Seeded Admin**: Default admin created on startup
 - **Admin Authentication**: JWT-based login
 - **Admin CRUD**: Create, read, update, delete admin accounts
 - **Role Management**: Admin role stored in JWT claims
 
-### ✅ Therapist Management
+###  Therapist Management
 - **Registration by Admin**: Only admins can register therapists
 - **Password Security**: BCrypt hashing (never store plain text)
 - **Status Management**: ACTIVE, INACTIVE, SUSPENDED
 - **Full CRUD**: Complete therapist lifecycle management
 
-### ✅ Therapist Authentication
+###  Therapist Authentication
 - **Login Endpoint**: POST /api/auth/therapist/login
 - **Status Validation**: Login rejected if not ACTIVE
 - **JWT Token**: Contains email and THERAPIST role
 
-### ✅ Security & RBAC
+###  Security & RBAC
 - **Method-Level**: @PreAuthorize annotations
 - **URL-Level**: SecurityFilterChain rules
 - **Role-Based**: ADMIN and THERAPIST roles
@@ -33,7 +33,7 @@ This implementation provides a complete **Admin and Therapist Management System*
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -73,7 +73,7 @@ This implementation provides a complete **Admin and Therapist Management System*
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 src/main/java/com/alu/wellconnect/
@@ -115,7 +115,7 @@ src/main/java/com/alu/wellconnect/
 
 ---
 
-## 🗄️ Database Schema
+## ️ Database Schema
 
 ### Users Table
 ```sql
@@ -151,7 +151,7 @@ CREATE TABLE therapists (
 
 ---
 
-## 🔐 Security Implementation
+##  Security Implementation
 
 ### 1. Password Hashing
 ```java
@@ -226,7 +226,7 @@ curl -X POST http://localhost:8080/api/auth/admin/login \
 
 ---
 
-## 📚 API Documentation
+##  API Documentation
 
 ### Default Credentials
 ```
@@ -252,16 +252,16 @@ Admin Password: admin123
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Quick Test Flow
-1. ✅ Admin login → Get token
-2. ✅ Create admin → Verify in DB
-3. ✅ Register therapist → Check password hashed
-4. ✅ Therapist login (ACTIVE) → Success
-5. ✅ Suspend therapist → Update status
-6. ✅ Therapist login (SUSPENDED) → Fail
-7. ✅ Test RBAC → Therapist cannot access admin endpoints
+1.  Admin login → Get token
+2.  Create admin → Verify in DB
+3.  Register therapist → Check password hashed
+4.  Therapist login (ACTIVE) → Success
+5.  Suspend therapist → Update status
+6.  Therapist login (SUSPENDED) → Fail
+7.  Test RBAC → Therapist cannot access admin endpoints
 
 ### Test Files
 - `TESTING_GUIDE.md` - Detailed test scenarios
@@ -270,7 +270,7 @@ Admin Password: admin123
 
 ---
 
-## 📖 Documentation Files
+##  Documentation Files
 
 | File | Description |
 |------|-------------|
@@ -283,7 +283,7 @@ Admin Password: admin123
 
 ---
 
-## ✅ Sprint 1 Day 2 Checklist
+##  Sprint 1 Day 2 Checklist
 
 - [x] Admin auto-seeded on startup
 - [x] Admin login with JWT
@@ -302,11 +302,11 @@ Admin Password: admin123
 - [x] Role claims in JWT
 - [x] Swagger documentation
 
-**All requirements completed! 🎉**
+**All requirements completed! **
 
 ---
 
-## 🔧 Technologies Used
+##  Technologies Used
 
 - **Java 21**
 - **Spring Boot 3.3.5**
@@ -321,20 +321,20 @@ Admin Password: admin123
 
 ---
 
-## 🎯 Key Achievements
+##  Key Achievements
 
-1. ✅ **Secure Authentication**: JWT-based with role claims
-2. ✅ **Password Security**: BCrypt hashing, never plain text
-3. ✅ **RBAC**: Multi-layer authorization (URL + Method)
-4. ✅ **Status Validation**: Business logic enforcement
-5. ✅ **Auto-Seeding**: Zero-config admin setup
-6. ✅ **Clean Architecture**: Separation of concerns
-7. ✅ **API Documentation**: Swagger UI ready
-8. ✅ **Production Ready**: Error handling, validation
+1.  **Secure Authentication**: JWT-based with role claims
+2.  **Password Security**: BCrypt hashing, never plain text
+3.  **RBAC**: Multi-layer authorization (URL + Method)
+4.  **Status Validation**: Business logic enforcement
+5.  **Auto-Seeding**: Zero-config admin setup
+6.  **Clean Architecture**: Separation of concerns
+7.  **API Documentation**: Swagger UI ready
+8.  **Production Ready**: Error handling, validation
 
 ---
 
-## 🚀 Next Sprint Tasks
+##  Next Sprint Tasks
 
 - [ ] Therapist profile management
 - [ ] Patient registration and management
@@ -345,7 +345,7 @@ Admin Password: admin123
 
 ---
 
-## 📞 Support
+##  Support
 
 For questions or issues:
 1. Check documentation files
@@ -355,4 +355,4 @@ For questions or issues:
 
 ---
 
-**Built with ❤️ for WellConnect Mental Health Platform**
+**Built with  for WellConnect Mental Health Platform**

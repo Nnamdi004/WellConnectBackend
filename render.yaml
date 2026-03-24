@@ -2,7 +2,7 @@ services:
   - type: web
     name: wellconnect-backend
     env: docker
-    plan: free
+    plan: free # Change to a paid plan if needed
     dockerContext: .
     dockerfilePath: Dockerfile
     healthCheckPath: /actuator/health

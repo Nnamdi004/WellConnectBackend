@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: wellconnect-db
+    environment:
+      POSTGRES_DB: wellconnect
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password # Match with .env or application.yaml
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: wellconnect-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/wellconnect
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=your_password
+      - JWT_SECRET=your-256-bit-secret-key-change-this-in-production-must-be-at-least-32-characters
+      - ENCRYPTION_KEY=1234567890123456
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=dev # Use dev profile for local testing
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
