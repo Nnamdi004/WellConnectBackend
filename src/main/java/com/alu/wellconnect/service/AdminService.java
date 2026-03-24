@@ -52,7 +52,7 @@ public class AdminService {
 
         return AuthResponse.builder()
                 .token(token)
-                .email(admin.getEmail())
+                .username(admin.getUsername())
                 .role(admin.getRole().name())
                 .build();
     }
