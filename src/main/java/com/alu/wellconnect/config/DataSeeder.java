@@ -33,13 +33,13 @@ public class DataSeeder implements CommandLineRunner {
             User admin = User.builder()
                     .username("admin")
                     .email(adminEmail)
-                    .passwordHash(passwordEncoder.encode(adminPassword))
+                    .passwordHash(passwordEncoder.encode(System.getenv("ADMIN_PASSWORD")))
                     .role(User.Role.ADMIN)
                     .status(User.Status.ACTIVE)
                     .build();
             
             userRepository.save(admin);
-            log.info("Default admin created - Email: {}, Password: [HIDDEN]", adminEmail);
+            log.info("Default admin created - Email: {}", adminEmail);
         } else {
             log.info("Admin already exists");
         }
