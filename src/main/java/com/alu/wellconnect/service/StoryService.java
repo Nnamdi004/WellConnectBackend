@@ -6,6 +6,8 @@ import com.alu.wellconnect.enums.StoryStatus;
 import com.alu.wellconnect.enums.Visibility;
 import com.alu.wellconnect.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class StoryService {
     private final CommentRepository commentRepository;
 
     @Transactional
+    @CacheEvict(value = "public_feed", allEntries = true)
     public StoryResponse createStory(StoryRequest request, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -50,6 +53,7 @@ public class StoryService {
         return mapToResponse(saved);
     }
 
+    @Cacheable(value = "public_feed")
     public List<StoryResponse> getPublicFeed() {
         List<Story> stories = storyRepository.findByVisibilityAndStatus(
                 Visibility.PUBLISHED, StoryStatus.APPROVED);
@@ -59,6 +63,7 @@ public class StoryService {
     }
 
     @Transactional
+    @CacheEvict(value = "public_feed", allEntries = true)
     public void likeStory(Long storyId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -76,6 +81,7 @@ public class StoryService {
     }
 
     @Transactional
+    @CacheEvict(value = "public_feed", allEntries = true)
     public void unlikeStory(Long storyId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));

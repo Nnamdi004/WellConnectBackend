@@ -5,6 +5,8 @@ import com.alu.wellconnect.entity.Therapist;
 import com.alu.wellconnect.repository.TherapistRepository;
 import com.alu.wellconnect.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class TherapistService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    @CacheEvict(value = "therapists", allEntries = true)
     public TherapistResponse registerTherapist(TherapistRegisterRequest request) {
         if (therapistRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
@@ -65,18 +68,21 @@ public class TherapistService {
                 .build();
     }
 
+    @Cacheable(value = "therapists")
     public List<TherapistResponse> getAllTherapists() {
         return therapistRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "therapist", key = "#id")
     public TherapistResponse getTherapistById(Long id) {
         Therapist therapist = therapistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Therapist not found"));
         return mapToResponse(therapist);
     }
 
+    @CacheEvict(value = {"therapists", "therapist"}, allEntries = true)
     public TherapistResponse updateTherapist(Long id, TherapistUpdateRequest request) {
         Therapist therapist = therapistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Therapist not found"));
@@ -98,6 +104,7 @@ public class TherapistService {
         return mapToResponse(updated);
     }
 
+    @CacheEvict(value = {"therapists", "therapist"}, allEntries = true)
     public void deleteTherapist(Long id) {
         Therapist therapist = therapistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Therapist not found"));
