@@ -28,12 +28,32 @@ public class StoryController {
     @Operation(summary = "Get story by ID")
     public ResponseEntity<StoryResponse> getStoryById(@PathVariable Long id) {
         try {
-            StoryResponse story = storyService.mapToResponse(null); // This is just a placeholder, the service should have a real method
-            // In a real app, I'd call storyService.getStoryById(id)
-            // But for the test (404), I'll just check if it exists in DB.
-            return ResponseEntity.notFound().build(); // Forced 404 for non-existent case in test
+            return ResponseEntity.ok(storyService.getStoryById(id));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
+    }
+
+    @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Create a new story")
+    public ResponseEntity<StoryResponse> createStory(@RequestBody StoryRequest request, java.security.Principal principal) {
+        return ResponseEntity.ok(storyService.createStory(request, principal.getName()));
+    }
+
+    @PostMapping("/{id}/like")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Like a story")
+    public ResponseEntity<Void> likeStory(@PathVariable Long id, java.security.Principal principal) {
+        storyService.likeStory(id, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/like")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Unlike a story")
+    public ResponseEntity<Void> unlikeStory(@PathVariable Long id, java.security.Principal principal) {
+        storyService.unlikeStory(id, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 }

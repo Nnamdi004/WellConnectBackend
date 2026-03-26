@@ -62,6 +62,12 @@ public class StoryService {
                 .collect(Collectors.toList());
     }
 
+    public StoryResponse getStoryById(Long id) {
+        Story story = storyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Story not found"));
+        return mapToResponse(story);
+    }
+
     @Transactional
     @CacheEvict(value = "public_feed", allEntries = true)
     public void likeStory(Long storyId, String email) {

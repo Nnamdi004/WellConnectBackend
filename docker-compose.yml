@@ -24,8 +24,18 @@ services:
       - ENCRYPTION_KEY=1234567890123456
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev # Use dev profile for local testing
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
     depends_on:
       - db
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: wellconnect-redis
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:
