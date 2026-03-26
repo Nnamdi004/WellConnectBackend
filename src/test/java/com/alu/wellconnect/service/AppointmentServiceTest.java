@@ -43,7 +43,7 @@ public class AppointmentServiceTest {
         Appointment appt2 = new Appointment(); 
         appt2.setScheduledTime(java.time.LocalDateTime.parse("2026-03-25T14:00:00"));
         
-        when(appointmentRepository.findByTherapistIdAndDate(eq(therapistId), eq(date)))
+        when(appointmentRepository.findByTherapistIdAndDate(eq(therapistId), eq(java.time.LocalDate.parse(date))))
             .thenReturn(Arrays.asList(appt1, appt2));
 
         // Act

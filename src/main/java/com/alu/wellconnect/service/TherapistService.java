@@ -111,6 +111,46 @@ public class TherapistService {
         therapistRepository.delete(therapist);
     }
 
+    public List<String> getAvailability(Long therapistId, LocalDate date) {
+        Therapist therapist = therapistRepository.findById(therapistId)
+                .orElseThrow(() -> new RuntimeException("Therapist not found"));
+
+        List<String> availableSlots = new ArrayList<>();
+        
+        // Get therapist's standard hours
+        String standardHours = therapist.getDailyAvailableHours();
+        String[] hours = standardHours.split("-");
+        
+        if (hours.length == 2) {
+            LocalTime startTime = LocalTime.parse(hours[0]);
+            LocalTime endTime = LocalTime.parse(hours[1]);
+            
+            // Get all appointments for this therapist on the given date
+            List<Appointment> appointments = appointmentRepository.findAll().stream()
+                    .filter(a -> a.getTherapist() != null && a.getTherapist().getTherapistId().equals(therapistId))
+                    .filter(a -> a.getScheduledTime() != null && a.getScheduledTime().toLocalDate().equals(date))
+                    .filter(a -> a.getStatus() == AppointmentStatus.CONFIRMED)
+                    .collect(Collectors.toList());
+            
+            // Generate hourly slots and mark as available if no appointment
+            LocalTime current = startTime;
+            while (current.isBefore(endTime)) {
+                String slot = current.toString();
+                final LocalTime slotTime = current;
+                boolean isBooked = appointments.stream()
+                        .anyMatch(a -> a.getScheduledTime().toLocalTime().equals(slotTime));
+                
+                if (!isBooked) {
+                    availableSlots.add(slot);
+                }
+                
+                current = current.plusHours(1);
+            }
+        }
+        
+        return availableSlots;
+    }
+
     private TherapistResponse mapToResponse(Therapist therapist) {
         return TherapistResponse.builder()
                 .therapistId(therapist.getTherapistId())

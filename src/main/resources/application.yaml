@@ -1,14 +1,14 @@
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT}
 
 spring:
   application:
     name: Wellconnect
   
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/wellconnect}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:anyika}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -22,9 +22,9 @@ spring:
   
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
   
   cache:
     type: redis
@@ -53,12 +53,29 @@ springdoc:
     enabled: true
 
 jwt:
-  secret: ${JWT_SECRET:your-256-bit-secret-key-change-this-in-production-must-be-at-least-32-characters}
-  expiration: ${JWT_EXPIRATION:86400000}
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
 encryption:
-  key: ${ENCRYPTION_KEY:1234567890123456}
+  key: ${ENCRYPTION_KEY}
 
 admin:
-  email: ${ADMIN_EMAIL:admin@wellconnect.com}
-  password: ${ADMIN_PASSWORD:admin123}
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
+# stolen from portal
+#spring:
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: create-drop
+#    show-sql: true
+#  main:
+#    banner-mode: off
+#  flyway:
+#    enabled: false
+
+#app:
+#  admin:
+#    bootstrap:
+#      password: TestPass123!
+#      email: wellconnect@gmail.com

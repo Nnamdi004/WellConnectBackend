@@ -15,7 +15,7 @@
 	</parent>
 
 	<!-- Project Info -->
-	<groupId>org.igirerwanda</groupId>
+	<groupId>org.wellconnect</groupId>
 	<artifactId>WellConnect-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wellconnect-backend</name>
@@ -114,21 +114,27 @@
 		</dependency>
 
 		<!-- RATE LIMITING -->
+		<!-- Correct Version -->
 		<dependency>
 			<groupId>com.github.vladimir-bukhtoyarov</groupId>
 			<artifactId>bucket4j-core</artifactId>
-			<version>${bucket4j.version}</version>
+			<version>7.6.0</version>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/com.bucket4j/bucket4j-redis -->
 		<dependency>
-			<groupId>com.github.vladimir-bukhtoyarov</groupId>
+			<groupId>com.bucket4j</groupId>
 			<artifactId>bucket4j-redis</artifactId>
-			<version>${bucket4j.version}</version>
+			<version>8.7.0</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- REDIS -->
+		<!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>3.5.10</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- ACTUATOR -->

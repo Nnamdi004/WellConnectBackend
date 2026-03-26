@@ -14,10 +14,6 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import io.github.bucket4j.distributed.proxy.ProxyManager;
-import io.github.bucket4j.redis.lettuce.cas.LettuceCasProxyManager;
-import io.lettuce.core.RedisClient;
-
 import java.time.Duration;
 
 @Configuration
@@ -65,11 +61,6 @@ public class RedisConfig {
                 .build();
     }
 
-    @Bean
-    public ProxyManager<byte[]> proxyManager(RedisConnectionFactory connectionFactory) {
-        LettuceConnectionFactory lettuceFactory = (LettuceConnectionFactory) connectionFactory;
-        RedisClient redisClient = (RedisClient) lettuceFactory.getNativeConnectionFactory().getNativeClient();
-        return LettuceCasProxyManager.builder(redisClient)
-                .build(new StringRedisSerializer().serialize("rate-limit:"));
-    }
+    // ProxyManager bean removed - can be implemented later with proper bucket4j version
+    // Currently, rate limiting will be handled via simple in-memory approach in RateLimitingService
 }

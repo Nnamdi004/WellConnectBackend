@@ -37,7 +37,7 @@ public class DatabaseIntegrationTest {
         // Act: Save 3 notifications with a slight delay so timestamps are different
         Notification n1 = Notification.builder()
                 .user(user)
-                .type(NotificationType.SYSTEM_ALERT)
+                .type(NotificationType.APPOINTMENT_UPDATE)
                 .message("First")
                 .isRead(false)
                 .build();

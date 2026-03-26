@@ -4,7 +4,6 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.Refill;
-import io.github.bucket4j.distributed.proxy.ProxyManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +11,17 @@ import java.time.Duration;
 import java.util.function.Supplier;
 
 @Service
-@RequiredArgsConstructor
 public class RateLimitingService {
 
-    private final ProxyManager<byte[]> proxyManager;
+    private static final java.util.Map<String, Bucket> bucketCache = new java.util.concurrent.ConcurrentHashMap<>();
 
     public Bucket resolveBucket(String key, int capacity, int tokens, long seconds) {
-        Supplier<BucketConfiguration> configSupplier = () -> {
+        return bucketCache.computeIfAbsent(key, k -> {
             Refill refill = Refill.greedy(tokens, Duration.ofSeconds(seconds));
             Bandwidth limit = Bandwidth.classic(capacity, refill);
-            return BucketConfiguration.builder()
+            return io.github.bucket4j.Bucket4j.builder()
                     .addLimit(limit)
                     .build();
-        };
-
-        return proxyManager.builder().build(key.getBytes(), configSupplier);
+        });
     }
 }
