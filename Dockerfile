@@ -29,11 +29,11 @@ WORKDIR /app
 COPY --from=builder /app/target/WellConnect-backend-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose port
-EXPOSE 8080
+EXPOSE 10000
 
 # Environment variables
-ENV SERVER_PORT=8080
-ENV SPRING_PROFILES_ACTIVE=dev
+ENV SERVER_PORT=10000
+ENV SPRING_PROFILES_ACTIVE=prod
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

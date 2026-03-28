@@ -3,9 +3,9 @@ services:
     image: postgres:15-alpine
     container_name: wellconnect-db
     environment:
-      POSTGRES_DB: wellconnect
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: anyika
+      POSTGRES_DB: ${SPRING_DATASOURCE_URL}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -22,20 +22,20 @@ services:
     build: .
     container_name: wellconnect-backend
     ports:
-      - "8080:8080"
+      - "10000:10000"
     environment:
-      - DB_URL=${DB_URL:-jdbc:postgresql://db:5432/wellconnect}
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB:${SPRING_DATASOURCE_URL}
+      - POSTGRES_USER:${SPRING_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD:${SPRING_DATASOURCE_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION:-86400000}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-      - SERVER_PORT=${SERVER_PORT:-8080}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - ADMIN_NAME=${ADMIN_NAME:-Administrator}
+      - ADMIN_NAME=${ADMIN_NAME}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     depends_on:
