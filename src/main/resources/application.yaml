@@ -65,5 +65,5 @@ spring:
       on-profile: prod
   jpa:
     hibernate:
-      ddl-auto: validate        # validate schema in prod
+      ddl-auto: update        # validate schema in prod
     show-sql: false
