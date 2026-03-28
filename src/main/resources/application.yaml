@@ -1,49 +1,43 @@
 server:
-  port: 10000
+  port: ${PORT:8080}
 
 spring:
   application:
     name: Wellconnect
-  
+
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update          # update schema in prod safely
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      format_sql: true
     show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-  
+
+  logging:
+    level:
+      org.hibernate.SQL: DEBUG
+      org.springframework: INFO
+
   data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
-  
+
   cache:
     type: redis
     redis:
-      time-to-live: 600000 # 10 minutes default
+      time-to-live: 600000      # 10 minutes
       cache-null-values: false
 
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
   sql:
     init:
-      mode: never
+      mode: never               # disable SQL initialization in prod
 
 springdoc:
   api-docs:
@@ -64,24 +58,12 @@ admin:
   email: ${ADMIN_EMAIL}
   password: ${ADMIN_PASSWORD}
 
-  spring:
-    jpa:
-      hibernate:
-        ddl-auto: update
-# stolen from portal
-#spring:
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
-#    hibernate:
-#      ddl-auto: create-drop
-#    show-sql: true
-#  main:
-#    banner-mode: off
-#  flyway:
-#    enabled: false
-
-#app:
-#  admin:
-#    bootstrap:
-#      password: TestPass123!
-#      email: wellconnect@gmail.com
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: validate        # validate schema in prod
+    show-sql: false
