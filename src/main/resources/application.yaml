@@ -63,6 +63,11 @@ admin:
   name: ${ADMIN_NAME}
   email: ${ADMIN_EMAIL}
   password: ${ADMIN_PASSWORD}
+
+  spring:
+    jpa:
+      hibernate:
+        ddl-auto: update
 # stolen from portal
 #spring:
 #  jpa:
