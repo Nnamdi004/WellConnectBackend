@@ -8,18 +8,18 @@ services:
     healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
-        value: 8080
+        value: 10000
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: DB_URL
+      - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: wellconnect-db
           property: connectionString
-      - key: DB_USERNAME
+      - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: wellconnect-db
           property: user
-      - key: DB_PASSWORD
+      - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
           name: wellconnect-db
           property: password
