@@ -1,29 +1,39 @@
-# Stage 1: Build
-FROM eclipse-temurin:21-jdk-jammy AS build
+# Stage 1: Build with Maven
+FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 
-# Copy maven wrapper and pom.xml
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
+# Install wget to download Maven if needed
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 
-# Copy source code and build
+# Download and use Maven (instead of Maven wrapper)
+RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz && \
+    tar -xzf apache-maven-3.9.6-bin.tar.gz && \
+    rm apache-maven-3.9.6-bin.tar.gz && \
+    ln -s /app/apache-maven-3.9.6/bin/mvn /usr/local/bin/mvn
+
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy source code
 COPY src ./src
-RUN ./mvnw clean package -DskipTests
 
-# Stage 2: Run
+# Build the application
+RUN mvn clean package -DskipTests -B
+
+# Stage 2: Runtime
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Copy the built JAR from the build stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy the built JAR from builder stage
+COPY --from=builder /app/target/WellConnect-backend-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the application port
+# Expose port
 EXPOSE 8080
 
-# Environment variables with defaults
+# Environment variables
 ENV SERVER_PORT=8080
-ENV SPRING_PROFILES_ACTIVE=prod
+ENV SPRING_PROFILES_ACTIVE=dev
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
