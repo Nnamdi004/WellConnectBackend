@@ -56,7 +56,8 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://well-connect-frontend-mauve.vercel.app"
+                "https://well-connect-frontend-mauve.vercel.app",
+                "https://localhost:3000"  // For HTTPS local development
         ));
 
         config.setAllowedMethods(List.of(
