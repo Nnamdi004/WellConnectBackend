@@ -12,7 +12,7 @@ A mental health platform connecting patients with therapists — featuring real-
 
 **Project presentation**: https://www.overleaf.com/read/hrggqhfkqyng#cca31c
 
-**Video Demo**: 
+**Video Demo**: https://youtu.be/4iNEJFKcLDw
 
 ## Table of Contents
  
